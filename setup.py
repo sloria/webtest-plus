@@ -105,16 +105,17 @@ setup(
     packages=find_packages(exclude=("test*", )),
     package_dir={'webtest_plus': 'webtest_plus'},
     install_requires=[
-        'webtest'
+        'webtest>=2.0.9'
     ],
     license=read("LICENSE"),
     zip_safe=False,
-    keywords=('webtest-plus', 'testing', 'wsgi', 'webtest'),
+    keywords="wsgi test unit tests web",
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
+        "Topic :: Internet :: WWW/HTTP :: WSGI",
+        "Topic :: Internet :: WWW/HTTP :: WSGI :: Server",
         "Programming Language :: Python :: 2",
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',

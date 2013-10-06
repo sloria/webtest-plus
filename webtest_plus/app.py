@@ -25,6 +25,15 @@ def _add_auth(auth, headers):
 class TestApp(webtest.TestApp):
     '''A modified webtest.TestApp with useful features such as
     requests-style authentication and auto_follow.
+
+    Example: ::
+
+        >>> from my_wsgi_app import application
+        >>> from webtest_plus import TestApp
+        >>> app = TestApp(application)
+        >>> app.get("/protected/", auth=("admin", "passw0rd"))
+        >>> app.status_code
+        200
     '''
 
     def __init__(self, app, extra_environ=None, relative_to=None,

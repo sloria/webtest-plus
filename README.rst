@@ -2,7 +2,16 @@
 webtest-plus
 ============
 
-An extension of `WebTest <http://webtest.pythonpaste.org/en/latest/>`_  with useful extras, including `requests <http://docs.python-requests.org/en/latest/>`_ -style authentication.
+.. image:: https://badge.fury.io/py/webtest-plus.png
+    :target: http://badge.fury.io/py/webtest-plus
+
+An extension of `WebTest <http://webtest.pythonpaste.org/en/latest/>`_  with useful extras, including `requests <http://docs.python-requests.org/en/latest/>`_-style authentication.
+
+Install
+-------
+.. code-block:: bash
+
+    $ pip install -U webtest-plus
 
 Usage
 -----

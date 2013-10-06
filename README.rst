@@ -5,6 +5,9 @@ webtest-plus
 .. image:: https://badge.fury.io/py/webtest-plus.png
     :target: http://badge.fury.io/py/webtest-plus
 
+.. image:: https://travis-ci.org/sloria/webtest-plus.png?branch=master
+    :target: https://travis-ci.org/sloria/webtest-plus
+
 An extension of `WebTest <http://webtest.pythonpaste.org/en/latest/>`_  with useful extras, including `requests <http://docs.python-requests.org/en/latest/>`_-style authentication.
 
 Install

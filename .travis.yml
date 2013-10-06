@@ -1,0 +1,12 @@
+# Config file for automatic testing at travis-ci.org
+
+language: python
+
+python:
+  - "3.3"
+  - "2.7"
+  - "2.6"
+
+install: pip install -U .
+
+script: nosetests

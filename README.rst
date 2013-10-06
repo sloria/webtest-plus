@@ -42,7 +42,7 @@ Usage
             self.app.authenticate(username="admin", password="passw0rd")
             assert self.app.get("/secret/").status_code == 200
             self.app.deauthenticate()
-            assert self.app.get("/secret/").status_code == 401
+            assert self.app.get("/secret/", expect_errors=True).status_code == 401
 
 Features
 --------

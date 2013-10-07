@@ -36,10 +36,8 @@ class TestApp(webtest.TestApp):
         200
     '''
 
-    def __init__(self, app, extra_environ=None, relative_to=None,
-                 use_unicode=True, cookiejar=None):
-        super(TestApp, self).__init__(app, extra_environ, relative_to, use_unicode,
-                                        cookiejar)
+    def __init__(self, *args, **kwargs):
+        super(TestApp, self).__init__(*args, **kwargs)
         self.auth = None
 
     def _build_headers(self, headers, auth):

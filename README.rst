@@ -47,7 +47,7 @@ Usage
         def test_posting_json(self):
             # Testing json requests and responses
             response = self.app.post_json("/postsecret/", {"secret": "myprecious"},
-                                            auth=("admin", "passw0rd)"))
+                                            auth=("admin", "passw0rd"))
             assert response.request.content_type == "application/json"
 
 

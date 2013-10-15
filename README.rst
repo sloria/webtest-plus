@@ -44,11 +44,19 @@ Usage
             self.app.deauthenticate()
             assert self.app.get("/secret/", expect_errors=True).status_code == 401
 
+        def test_posting_json(self):
+            # Testing json requests and responses
+            response = self.app.post_json("/postsecret/", {"secret": "myprecious"},
+                                            auth=("admin", "passw0rd)"))
+            assert response.request.content_type == "application/json"
+
+
 Features
 --------
 
 * Basic HTTP authentication
 * Auto-follow redirects
+* Framework-agnostic
 
 Requirements
 ------------

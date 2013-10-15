@@ -62,6 +62,13 @@ class TestTestApp(unittest.TestCase):
                     401)
         assert_equal(self.app.delete("/foo/bar/baz/", auth=self.auth).status_code, 200)
 
+    def test_auth_post_json(self):
+        assert_equal(self.app.post_json("/secretjson/", {"name": "Steve"},
+                    expect_errors=True).status_code, 401)
+        res = self.app.post_json("/secretjson/", {"name": "Steve"}, auth=self.auth)
+        assert_equal(res.request.content_type, "application/json")
+        assert_equal(res.status_code, 200)
+
 
 if __name__ == '__main__':
     unittest.main()

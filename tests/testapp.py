@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 '''A simple flask app to use for testing.'''
+import logging
+
 from functools import wraps
 from flask import Flask, Response, request, jsonify, redirect
 
+logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 
@@ -25,7 +28,6 @@ def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         auth = request.authorization
-        print(auth)
         if not auth or not check_auth(auth.username, auth.password):
             return authenticate()
         return f(*args, **kwargs)
@@ -76,6 +78,13 @@ def r2():
 
 @app.route("/redirect3/")
 def r3():
+    return jsonify({"status": "finished"})
+
+
+@app.route("/secretjson/", methods=["POST"])
+@requires_auth
+def secretjson():
+    logger.debug(request.content_type)
     return jsonify({"status": "finished"})
 
 

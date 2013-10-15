@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import webtest
+from webtest import utils
 from base64 import b64encode
 
 from webtest_plus.compat import PY2, binary_type
@@ -102,7 +103,7 @@ class TestApp(webtest.TestApp):
                     status=status,
                     expect_errors=expect_errors, xhr=xhr, **kwargs)
 
-    def delete(self, url, params='', headers=None,
+    def delete(self, url, params=utils.NoDefault, headers=None,
                extra_environ=None, status=None, expect_errors=False,
                content_type=None, xhr=False, auth=None, **kwargs):
         return super(TestApp, self).delete(
@@ -112,3 +113,25 @@ class TestApp(webtest.TestApp):
                         status=status,
                         expect_errors=expect_errors,
                         content_type=content_type, xhr=xhr, **kwargs)
+
+    def _gen_request(self, method, url, params=utils.NoDefault,
+                     headers=None, extra_environ=None, status=None,
+                     upload_files=None, expect_errors=False,
+                     content_type=None, auth=None, **kwargs):
+        """Do a generic request.
+        """
+        return super(TestApp, self)._gen_request(method=method,
+                                                url=url,
+                                                params=params,
+                                                headers=self._build_headers(headers, auth),
+                                                extra_environ=extra_environ,
+                                                status=status,
+                                                upload_files=upload_files,
+                                                expect_errors=expect_errors,
+                                                content_type=content_type,
+                                                **kwargs)
+
+    post_json = utils.json_method('POST')
+    put_json = utils.json_method('PUT')
+    patch_json = utils.json_method('PATCH')
+    delete_json = utils.json_method('DELETE')

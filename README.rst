@@ -50,6 +50,11 @@ Usage
                                             auth=("admin", "passw0rd"))
             assert response.request.content_type == "application/json"
 
+        def test_clicking(self):
+            response = self.app.get("/")
+            response = response.click("Protected link", auth=("admin", "passw0rd"))
+            assert response.status_code == 200
+
 
 Features
 --------

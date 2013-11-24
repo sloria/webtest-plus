@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+
 from webtest import response
 
 
@@ -54,3 +56,21 @@ class TestResponse(response.TestResponse):
         auth = auth or self.test_app.auth
         return self.goto(str(found_attrs['uri']), extra_environ=extra_environ,
                         auth=auth)
+
+    def clickbutton(self, description=None, buttonid=None, href=None,
+                    index=None, verbose=False, auth=None):
+        """
+        Like :meth:`~webtest.response.TestResponse.click`, except looks
+        for link-like buttons.
+        This kind of button should look like
+        ``<button onclick="...location.href='url'...">``.
+        """
+        found_html, found_desc, found_attrs = self._find_element(
+            tag='button', href_attr='onclick',
+            href_extract=re.compile(r"location\.href='(.*?)'"),
+            content=description,
+            id=buttonid,
+            href_pattern=href,
+            index=index, verbose=verbose)
+        auth = auth or self.test_app.auth
+        return self.goto(str(found_attrs['uri']), auth=auth)

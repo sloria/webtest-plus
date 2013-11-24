@@ -38,6 +38,7 @@ index_template = """<html>
     <body>
         <a href="/foo/">Foo</a>
         <a href='/foo/bar/'>Bar</a>
+        <button onclick="location.href='/foo/bar/'">Click me</button>
     </body>
 </html>
 """

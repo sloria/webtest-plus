@@ -84,6 +84,18 @@ class TestTestApp(unittest.TestCase):
         res = res.click("Bar")
         assert_equal(res.status_code, 200)
 
+    def test_clickbutton_with_auth(self):
+        res = self.app.get("/")
+        assert_raises(AppError, lambda: res.clickbutton("Click me"))
+        res = self.app.get('/')
+        res = res.clickbutton("Click me", auth=self.auth)
+
+    def test_clickbutton_with_authenticate(self):
+        self.app.authenticate(username=self.auth[0], password=self.auth[1])
+        res = self.app.get('/')
+        res = res.clickbutton("Click me")
+        assert_equal(res.status_code, 200)
+        assert_equal(res.request.path, "/foo/bar/")
 
 if __name__ == '__main__':
     unittest.main()

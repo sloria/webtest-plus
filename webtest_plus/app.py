@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-import webtest
-from webtest import utils
 from base64 import b64encode
 
+import webtest
+from webtest import utils
+
+from webtest_plus.response import TestResponse
 from webtest_plus.compat import PY2, binary_type
 
 
@@ -23,6 +25,10 @@ def _add_auth(auth, headers):
     return headers
 
 
+class TestRequest(webtest.app.TestRequest):
+    ResponseClass = TestResponse
+
+
 class TestApp(webtest.TestApp):
     '''A modified webtest.TestApp with useful features such as
     requests-style authentication and auto_follow.
@@ -36,6 +42,7 @@ class TestApp(webtest.TestApp):
         >>> app.status_code
         200
     '''
+    RequestClass = TestRequest
 
     def __init__(self, app, *args, **kwargs):
         super(TestApp, self).__init__(app, *args, **kwargs)

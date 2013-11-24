@@ -4,6 +4,8 @@
 import unittest
 from nose.tools import *  # PEP8 asserts
 
+from webtest.app import AppError
+
 from .testapp import app
 from webtest_plus import TestApp
 
@@ -67,6 +69,19 @@ class TestTestApp(unittest.TestCase):
                     expect_errors=True).status_code, 401)
         res = self.app.post_json("/secretjson/", {"name": "Steve"}, auth=self.auth)
         assert_equal(res.request.content_type, "application/json")
+        assert_equal(res.status_code, 200)
+
+    def test_click_with_auth(self):
+        res = self.app.get("/")
+        assert_raises(AppError, lambda: res.click("Bar"))
+        res = self.app.get("/")
+        res = res.click("Bar", auth=self.auth)
+        assert_equal(res.status_code, 200)
+
+    def test_click_with_authenticate(self):
+        self.app.authenticate(username=self.auth[0], password=self.auth[1])
+        res = self.app.get('/')
+        res = res.click("Bar")
         assert_equal(res.status_code, 200)
 
 

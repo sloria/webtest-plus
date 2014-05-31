@@ -102,6 +102,14 @@ class TestTestApp(unittest.TestCase):
         res = self.app.post('/requires_token', auth='mytoken', auth_type='jwt')
         assert_equal(res.status_code, 200)
 
+    def test_authenticate_with_token(self):
+        self.app.authenticate_with_token('mytoken')
+        res = self.app.post('/requires_token')
+        assert_equal(res.status_code, 200)
+
+        self.app.deauthenticate()
+        assert_equal(self.app.post('/requires_token', expect_errors=True).status_code,
+            401)
 
 if __name__ == '__main__':
     unittest.main()

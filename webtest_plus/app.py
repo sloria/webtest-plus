@@ -13,15 +13,24 @@ def _basic_auth_str(username, password):
     return 'Basic ' + b64encode(('%s:%s' % (username, password)).encode('latin1')).strip().decode('latin1')
 
 
-def _add_auth(auth, headers):
-    '''Adds authentication key to headers.'''
+def _add_auth(auth, headers, auth_type='basic'):
+    """Adds authentication key to headers."""
     headers = headers or {}
-    if isinstance(auth, (tuple, list)) and len(auth) == 2:
-        if PY2:
-            auth_header = binary_type(_basic_auth_str(*auth))
+    if auth_type == 'basic':
+        if isinstance(auth, (tuple, list)) and len(auth) == 2:
+            if PY2:
+                auth_header = binary_type(_basic_auth_str(*auth))
+            else:
+                auth_header = _basic_auth_str(*auth)
+            headers["Authorization"] = auth_header
+    elif auth_type == 'jwt':
+        if isinstance(auth, (tuple, list)):
+            token = auth[0]
         else:
-            auth_header = _basic_auth_str(*auth)
-        headers["Authorization"] = auth_header
+            token = auth
+        headers['Authorization'] = ' '.join(['Bearer', token])
+    else:
+        raise ValueError('Auth type {0!r} not supported'.format(auth_type))
     return headers
 
 
@@ -48,25 +57,26 @@ class TestApp(webtest.TestApp):
         super(TestApp, self).__init__(app, *args, **kwargs)
         self.auth = None
 
-    def _build_headers(self, headers, auth):
+    def _build_headers(self, headers, auth, auth_type):
         auth_tuple = auth or self.auth
         if auth_tuple:
-            headers = _add_auth(auth_tuple, headers)
+            headers = _add_auth(auth_tuple, headers, auth_type)
         return headers
 
     def authenticate(self, username, password):
-        '''Store HTTP basic authentication information for future requests.'''
+        """Store HTTP basic authentication information for future requests."""
         self.auth = (username, password)
 
     def deauthenticate(self):
-        '''Remove authentication information.'''
+        """Remove authentication information."""
         self.auth = None
 
     def get(self, url, params=None, headers=None, extra_environ=None,
             status=None, expect_errors=False, xhr=False, auth=None,
-            auto_follow=False, **kwargs):
+            auth_type='basic', auto_follow=False, **kwargs):
+        headers = self._build_headers(headers, auth, auth_type)
         response = super(TestApp, self).get(
-                        url, params, headers=self._build_headers(headers, auth),
+                        url, params, headers=headers,
                         extra_environ=extra_environ, status=status,
                         expect_errors=expect_errors, xhr=xhr)
         is_redirect = lambda r: r.status_int >= 300 and r.status_int < 400
@@ -76,46 +86,51 @@ class TestApp(webtest.TestApp):
 
     def post(self, url, params='', headers=None, extra_environ=None,
              status=None, upload_files=None, expect_errors=False,
-             content_type=None, xhr=False, auth=None, **kwargs):
+             content_type=None, xhr=False, auth=None, auth_type='basic', **kwargs):
+        headers = self._build_headers(headers, auth, auth_type)
         return super(TestApp, self).post(
-                    url, params, headers=self._build_headers(headers, auth),
+                    url, params, headers=headers,
                     extra_environ=extra_environ, status=status,
                     upload_files=upload_files, expect_errors=expect_errors,
                     content_type=content_type, xhr=xhr, **kwargs)
 
     def put(self, url, params='', headers=None, extra_environ=None,
             status=None, upload_files=None, expect_errors=False,
-            content_type=None, xhr=False, auth=None, **kwargs):
+            content_type=None, xhr=False, auth=None, auth_type='basic', **kwargs):
+
+        headers = self._build_headers(headers, auth, auth_type)
         return super(TestApp, self).put(
-                    url, params, headers=self._build_headers(headers, auth),
+                    url, params, headers=self._build_headers(headers, auth, auth_type),
                     extra_environ=extra_environ, status=status,
                     upload_files=upload_files, expect_errors=expect_errors,
                     content_type=content_type, xhr=xhr, **kwargs)
 
     def patch(self, url, params='', headers=None, extra_environ=None,
               status=None, upload_files=None, expect_errors=False,
-              content_type=None, xhr=False, auth=None, **kwargs):
+              content_type=None, xhr=False, auth=None, auth_type='basic', **kwargs):
+        headers = self._build_headers(headers, auth, auth_type)
         return super(TestApp, self).patch(
-                    url, params, headers=self._build_headers(headers, auth),
+                    url, params, headers=headers,
                     extra_environ=extra_environ, status=status,
                     upload_files=upload_files, expect_errors=expect_errors,
                     content_type=content_type, xhr=xhr, **kwargs)
 
     def options(self, url, headers=None, extra_environ=None,
-                status=None, expect_errors=False, xhr=False, auth=None, **kwargs):
+                status=None, expect_errors=False, xhr=False, auth=None,
+                auth_type='basic', **kwargs):
         return super(TestApp, self).options(
                     url=url,
-                    headers=self._build_headers(headers, auth),
+                    headers=self._build_headers(headers, auth, auth_type),
                     extra_environ=extra_environ,
                     status=status,
                     expect_errors=expect_errors, xhr=xhr, **kwargs)
 
     def delete(self, url, params=utils.NoDefault, headers=None,
                extra_environ=None, status=None, expect_errors=False,
-               content_type=None, xhr=False, auth=None, **kwargs):
+               content_type=None, xhr=False, auth=None, auth_type='basic', **kwargs):
         return super(TestApp, self).delete(
                         url=url, params=params,
-                        headers=self._build_headers(headers, auth),
+                        headers=self._build_headers(headers, auth, auth_type),
                         extra_environ=extra_environ,
                         status=status,
                         expect_errors=expect_errors,
@@ -124,13 +139,14 @@ class TestApp(webtest.TestApp):
     def _gen_request(self, method, url, params=utils.NoDefault,
                      headers=None, extra_environ=None, status=None,
                      upload_files=None, expect_errors=False,
-                     content_type=None, auth=None, **kwargs):
+                     content_type=None, auth=None, auth_type='basic', **kwargs):
         """Do a generic request.
         """
         return super(TestApp, self)._gen_request(method=method,
                                                 url=url,
                                                 params=params,
-                                                headers=self._build_headers(headers, auth),
+                                                headers=self._build_headers(
+                                                    headers, auth, auth_type),
                                                 extra_environ=extra_environ,
                                                 status=status,
                                                 upload_files=upload_files,

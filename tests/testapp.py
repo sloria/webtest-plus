@@ -33,6 +33,20 @@ def requires_auth(f):
         return f(*args, **kwargs)
     return decorated
 
+def check_token(auth_header):
+    parts = auth_header.strip().split()
+    return parts[0].lower() == 'bearer' and len(parts) == 2
+
+
+def requires_token(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.headers.get('Authorization', None)
+        if auth is None or not check_token(auth):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
+
 index_template = """<html>
     <head><title>This is the test app</title></head>
     <body>
@@ -87,6 +101,12 @@ def r3():
 def secretjson():
     logger.debug(request.content_type)
     return jsonify({"status": "finished"})
+
+
+@app.route('/requires_token', methods=['POST'])
+@requires_token
+def secretjson_token():
+    return jsonify({'status': 'finished'})
 
 
 if __name__ == '__main__':

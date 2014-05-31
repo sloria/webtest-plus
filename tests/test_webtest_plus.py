@@ -97,5 +97,11 @@ class TestTestApp(unittest.TestCase):
         assert_equal(res.status_code, 200)
         assert_equal(res.request.path, "/foo/bar/")
 
+    def test_auth_with_token(self):
+        assert_equal(self.app.post('/requires_token', expect_errors=True).status_code, 401)
+        res = self.app.post('/requires_token', auth='mytoken', auth_type='jwt')
+        assert_equal(res.status_code, 200)
+
+
 if __name__ == '__main__':
     unittest.main()

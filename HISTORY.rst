@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+0.3.0 (2014-05-31)
+++++++++++++++++++
+
+* Add support for JSON web token authentication.
+
 0.2.1 (2013-11-24)
 ++++++++++++++++++
 

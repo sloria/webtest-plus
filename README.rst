@@ -60,6 +60,7 @@ Features
 --------
 
 * Basic HTTP authentication
+* `JSON Web Token <https://openid.net/specs/draft-jones-json-web-token-07.html>`_ authentication
 * Auto-follow redirects
 * Framework-agnostic
 

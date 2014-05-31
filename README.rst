@@ -55,6 +55,16 @@ Usage
             response = response.click("Protected link", auth=("admin", "passw0rd"))
             assert response.status_code == 200
 
+        def test_token_auth(self):
+            response = self.app.get('/secret-requires-token/', expect_errors=True)
+            assert response.status_code == 401
+
+            # Authenticate with JWT
+            response = self.app.get('/secret-requires-token',
+                auth='yourlongtokenhere', auth_type='jwt')
+            assert response.status_code == 200
+
+
 
 Features
 --------

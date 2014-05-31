@@ -98,18 +98,40 @@ class TestTestApp(unittest.TestCase):
         assert_equal(res.request.path, "/foo/bar/")
 
     def test_auth_with_token(self):
-        assert_equal(self.app.post('/requires_token', expect_errors=True).status_code, 401)
-        res = self.app.post('/requires_token', auth='mytoken', auth_type='jwt')
+        assert_equal(self.app.post('/requires_token/', expect_errors=True).status_code, 401)
+        res = self.app.post('/requires_token/', auth='mytoken', auth_type='jwt')
         assert_equal(res.status_code, 200)
 
     def test_authenticate_with_token(self):
         self.app.authenticate_with_token('mytoken')
-        res = self.app.post('/requires_token')
+        res = self.app.post('/requires_token/')
         assert_equal(res.status_code, 200)
 
         self.app.deauthenticate()
-        assert_equal(self.app.post('/requires_token', expect_errors=True).status_code,
+        assert_equal(self.app.post('/requires_token/', expect_errors=True).status_code,
             401)
+
+    def test_click_with_required_token(self):
+        res = self.app.get('/')
+        assert_raises(AppError, lambda: res.click('Requires Token'))
+
+        res = self.app.get('/')
+        res = res.click('Requires Token', auth='mytoken', auth_type='jwt')
+        assert_equal(res.status_code, 200)
+
+    def test_clickbutton_with_token(self):
+        res = self.app.get('/')
+        assert_raises(AppError, lambda: res.clickbutton('Button Requires Token'))
+
+        res = res.clickbutton('Button Requires Token', auth='mytoken', auth_type='jwt')
+
+        assert_equal(res.status_code, 200)
+
+    def test_click_after_authenticating_with_token(self):
+        self.app.authenticate_with_token('mytoken')
+        res = self.app.get('/')
+        res = res.click('Requires Token')
+        assert_equal(res.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()

@@ -11,7 +11,7 @@ class TestResponse(response.TestResponse):
 
     def click(self, description=None, linkid=None, href=None,
               index=None, verbose=False,
-              extra_environ=None, auth=None):
+              extra_environ=None, auth=None, auth_type=None):
         """
         Click the link as described.  Each of ``description``,
         ``linkid``, and ``url`` are *patterns*, meaning that they are
@@ -54,11 +54,12 @@ class TestResponse(response.TestResponse):
             href_pattern=href,
             index=index, verbose=verbose)
         auth = auth or self.test_app.auth
+        auth_type = auth_type or self.test_app.auth_type
         return self.goto(str(found_attrs['uri']), extra_environ=extra_environ,
-                        auth=auth)
+                        auth=auth, auth_type=auth_type)
 
     def clickbutton(self, description=None, buttonid=None, href=None,
-                    index=None, verbose=False, auth=None):
+                    index=None, verbose=False, auth=None, auth_type=None):
         """
         Like :meth:`~webtest.response.TestResponse.click`, except looks
         for link-like buttons.
@@ -73,4 +74,5 @@ class TestResponse(response.TestResponse):
             href_pattern=href,
             index=index, verbose=verbose)
         auth = auth or self.test_app.auth
-        return self.goto(str(found_attrs['uri']), auth=auth)
+        auth_type = auth_type or self.test_app.auth_type
+        return self.goto(str(found_attrs['uri']), auth=auth, auth_type=auth_type)

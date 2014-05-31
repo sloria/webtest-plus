@@ -47,12 +47,15 @@ def requires_token(f):
         return f(*args, **kwargs)
     return decorated
 
-index_template = """<html>
+index_template = """
+<html>
     <head><title>This is the test app</title></head>
     <body>
         <a href="/foo/">Foo</a>
         <a href='/foo/bar/'>Bar</a>
         <button onclick="location.href='/foo/bar/'">Click me</button>
+        <a href='/requires_token/'>Requires Token</a>
+        <button onclick="location.href='/requires_token/'">Button Requires Token</button>
     </body>
 </html>
 """
@@ -103,7 +106,7 @@ def secretjson():
     return jsonify({"status": "finished"})
 
 
-@app.route('/requires_token', methods=['POST'])
+@app.route('/requires_token/', methods=['GET', 'POST'])
 @requires_token
 def secretjson_token():
     return jsonify({'status': 'finished'})

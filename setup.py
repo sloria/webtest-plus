@@ -111,7 +111,7 @@ setup(
     zip_safe=False,
     keywords="wsgi test unit tests web",
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         "Topic :: Internet :: WWW/HTTP :: WSGI",
@@ -121,6 +121,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
     ],
     test_suite='tests',
     tests_require=['nose', 'flask'],

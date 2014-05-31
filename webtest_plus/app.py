@@ -33,7 +33,7 @@ def _add_auth(auth, headers, auth_type='basic'):
     if PY2:
         auth_header = binary_type(header)
     else:
-        auth_header = _basic_auth_str(*auth)
+        auth_header = header
     headers['Authorization'] = auth_header
     return headers
 

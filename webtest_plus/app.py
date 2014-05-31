@@ -23,16 +23,18 @@ def _add_auth(auth, headers, auth_type='basic'):
     headers = headers or {}
     if auth_type == 'basic':
         if isinstance(auth, (tuple, list)) and len(auth) == 2:
-            if PY2:
-                auth_header = binary_type(_basic_auth_str(*auth))
-            else:
-                auth_header = _basic_auth_str(*auth)
-            headers["Authorization"] = auth_header
+            header = _basic_auth_str(*auth)
     elif auth_type == 'jwt':
         token = auth[0] if isinstance(auth, (tuple, list)) else auth
-        headers['Authorization'] = ' '.join(['Bearer', token])
+        header = ' '.join(['Bearer', token])
     else:
         raise ValueError('Auth type not supported: {0!r}'.format(auth_type))
+
+    if PY2:
+        auth_header = binary_type(header)
+    else:
+        auth_header = _basic_auth_str(*auth)
+    headers['Authorization'] = auth_header
     return headers
 
 

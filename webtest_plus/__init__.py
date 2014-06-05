@@ -4,3 +4,5 @@ __author__ = 'Steven Loria'
 __license__ = "MIT"
 
 from webtest_plus.app import TestApp
+
+__all__ = ['TestApp']

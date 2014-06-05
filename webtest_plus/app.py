@@ -21,6 +21,8 @@ def _add_auth(auth, headers, auth_type='basic'):
     :return: The modified headers dictionary
     """
     headers = headers or {}
+    # The auth header to add
+    header = None
     if auth_type == 'basic':
         if isinstance(auth, (tuple, list)) and len(auth) == 2:
             header = _basic_auth_str(*auth)

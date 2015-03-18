@@ -98,7 +98,7 @@ setup(
     version=__version__,
     description='An extension of WebTest with useful extras, including requests-style authentication.',
     long_description=(read("README.rst") + '\n\n' +
-                        read("HISTORY.rst")),
+                        read("CHANGELOG.rst")),
     author='Steven Loria',
     author_email='sloria1@gmail.com',
     url='https://github.com/sloria/webtest-plus',

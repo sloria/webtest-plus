@@ -78,7 +78,7 @@ def bar():
     return '<html><body>This is bar.</body></html>'
 
 
-@app.route("/foo/bar/baz/", methods=["POST", "PUT", "PATCH", "OPTIONS", "DELETE"])
+@app.route("/foo/bar/baz/", methods=['HEAD', "POST", "PUT", "PATCH", "OPTIONS", "DELETE"])
 @requires_auth
 def baz():
     return jsonify({"secret": "myprecious"})

@@ -45,7 +45,7 @@ class TestRequest(webtest.app.TestRequest):
 
 
 class TestApp(webtest.TestApp):
-    '''A modified webtest.TestApp with useful features such as
+    """A modified webtest.TestApp with useful features such as
     requests-style authentication and auto_follow.
 
     Example: ::
@@ -56,7 +56,7 @@ class TestApp(webtest.TestApp):
         >>> app.get("/protected/", auth=("admin", "passw0rd"))
         >>> app.status_code
         200
-    '''
+    """
     RequestClass = TestRequest
 
     def __init__(self, app, *args, **kwargs):
@@ -149,6 +149,14 @@ class TestApp(webtest.TestApp):
                         status=status,
                         expect_errors=expect_errors,
                         content_type=content_type, xhr=xhr, **kwargs)
+
+    def head(self, url, headers=None, extra_environ=None,
+             status=None, expect_errors=False, xhr=False,
+             auth=None, auth_type=None, **kwargs):
+        return super(TestApp, self).head(
+                     url=url, headers=self._build_headers(headers, auth, auth_type),
+                     extra_environ=extra_environ, status=status,
+                     expect_errors=expect_errors, xhr=xhr, **kwargs)
 
     def _gen_request(self, method, url, params=utils.NoDefault,
                      headers=None, extra_environ=None, status=None,

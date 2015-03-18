@@ -32,6 +32,10 @@ class TestTestApp(unittest.TestCase):
         res = self.app.post("/foo/bar/baz/", auth=self.auth)
         assert_equal(res.status_code, 200)
 
+    def test_auth_head(self):
+        res = self.app.head("/foo/bar/baz/", auth=self.auth)
+        assert_equal(res.status_code, 200)
+
     def test_auto_follow(self):
         res = self.app.get("/redirect/", auto_follow=True)
         assert_equal(res.status_code, 200)

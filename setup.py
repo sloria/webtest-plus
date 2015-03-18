@@ -109,7 +109,7 @@ setup(
     ],
     license=read("LICENSE"),
     zip_safe=False,
-    keywords="wsgi test unit tests web",
+    keywords="wsgi test unit tests web testing http",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',

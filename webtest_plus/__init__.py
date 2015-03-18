@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-__version__ = '0.3.1'
+from webtest_plus.app import TestApp
+
+__version__ = '0.3.2'
 __author__ = 'Steven Loria'
 __license__ = "MIT"
-
-from webtest_plus.app import TestApp
 
 __all__ = ['TestApp']

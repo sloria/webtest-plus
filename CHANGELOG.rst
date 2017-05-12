@@ -1,6 +1,13 @@
 Changelog
 ---------
 
+1.0.0 (2017-05-17)
+++++++++++++++++++
+
+* Fix handling of utf-encoded values when using ``auth`` (#3). Thanks @biern for the catch and patch.
+* Drop support for Python 2.6.
+* Test against Python 3.6.
+
 0.3.3 (2015-03-17)
 ++++++++++++++++++
 

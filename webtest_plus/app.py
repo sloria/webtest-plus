@@ -5,12 +5,20 @@ import webtest
 from webtest import utils
 
 from webtest_plus.response import TestResponse
-from webtest_plus.compat import PY2, binary_type
+from webtest_plus.compat import PY2, binary_type, unicode
 
 
 def _basic_auth_str(username, password):
     """Returns a Basic Auth string."""
-    return 'Basic ' + b64encode(('%s:%s' % (username, password)).encode('latin1')).strip().decode('latin1')
+    if isinstance(username, unicode):
+        username = username.encode('latin1')
+
+    if isinstance(password, unicode):
+        password = password.encode('latin1')
+
+    return b'Basic ' + (
+        b64encode(b':'.join((username, password))).strip()
+    )
 
 
 def _add_auth(auth, headers, auth_type='basic'):
